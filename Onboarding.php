@@ -1,9 +1,10 @@
 <?php
 
-include('includes/connection.php');
+require_once "vendor/autoload.php";
+
+use \PHPMailer\PHPMailer\PHPMailer;
 
 class Onboarding{
-
 
     private $hostname = 'localhost';
     private $username = 'root';
@@ -11,7 +12,6 @@ class Onboarding{
     private $database = 'dfa';
     private $connection;
     public $error;
-
 
     public function __construct(){
         $this->connection = new mysqli($this->hostname,$this->username,$this->password,$this->database);
@@ -91,10 +91,15 @@ class Onboarding{
         $preparedStatement->execute();
         $result = $preparedStatement->get_result();
         if($result->fetch_assoc() > 0) {
+            if(!$this->sendEmail($email, 'forgotPassword')){
+                http_response_code(500);
+                return [
+                    'error' => 'unable to send message'
+                ];
+            }
             http_response_code(200);
-            $this->sendEmail($email, 'forgotPassword');
             return [
-                'error' => 'An email has been sent to the email:'. $email
+                'success' => 'An email has been sent to the email:'. $email
             ];
         }else{
             http_response_code(404);
@@ -196,11 +201,26 @@ class Onboarding{
      * @param $subject
      */
     private function sendEmail($email, $subject){
+        $mail = new PHPMailer(true);
         switch ($subject){
             case 'forgotPassword':
-                mail($email,$subject,'Here is the link to change your current password!');
+                $mail->IsSMTP();
+                $mail->SMTPSecure = "ssl";
+                $mail->Host = "smtp.gmail.com";
+                $mail->Port = 465;
+                $mail->SMTPAuth = true;
+                $mail->Username = 'test@gmail.com'; // gmail
+                $mail->Password = 'password'; // gmail password
+
+                $mail->From = "bomzansanjaya@gmail.com";
+                $mail->FromName = "Test Name";
+                $mail->addAddress($email);
+                $mail->Subject = $subject;
+                $mail->isHTML(true);
+                $mail->Body = "<i>Hey your password reset link is: <a href='#'>Link</a></i>";
                 break;
         }
+        return $mail->send();
     }
 
     /**
