@@ -1,22 +1,22 @@
 <?php
 
-require_once "vendor/autoload.php";
-
-use \PHPMailer\PHPMailer\PHPMailer;
+require 'src/Exception.php';
+require 'src/PHPMailer.php';
+require 'src/SMTP.php';
+require 'src/Connection.php';
 
 class Onboarding{
 
-    private $hostname = 'localhost';
-    private $username = 'root';
-    private $password = 'reignofchaos';
-    private $database = 'dfa';
     private $connection;
     public $error;
 
     public function __construct(){
-        $this->connection = new mysqli($this->hostname,$this->username,$this->password,$this->database);
+        $connection = new Connection();
+        $this->connection = $connection->connectDatabase();
         if ($this->connection->connect_error)
-            die("Connection failed: " . $this->connection->connect_error);
+            return [
+                'error' => $this->connection->connect_error
+            ];
     }
 
     public function registerNewDF($email){
@@ -37,7 +37,6 @@ class Onboarding{
             $status = 0;
             $hashedPassword = password_hash('password',PASSWORD_DEFAULT);
             $preparedStatement->execute();
-            $this->sendEmail($email,'registration');
             http_response_code(200);
             return [
                 'success' => 'User Successfully Registered:'. $email
@@ -201,7 +200,7 @@ class Onboarding{
      * @param $subject
      */
     private function sendEmail($email, $subject){
-        $mail = new PHPMailer(true);
+        $mail = new \PHPMailer\PHPMailer\PHPMailer(true);
         switch ($subject){
             case 'forgotPassword':
                 $mail->IsSMTP();
@@ -212,7 +211,7 @@ class Onboarding{
                 $mail->Username = 'test@gmail.com'; // gmail
                 $mail->Password = 'password'; // gmail password
 
-                $mail->From = "bomzansanjaya@gmail.com";
+                $mail->From = "test@gmail.com";// gmail
                 $mail->FromName = "Test Name";
                 $mail->addAddress($email);
                 $mail->Subject = $subject;

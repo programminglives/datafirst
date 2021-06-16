@@ -9,8 +9,13 @@ if(isset($_POST['email'])){
         ],JSON_PRETTY_PRINT);
         die();
     }
-    $onboarding = new Onboarding();
-    $response = $onboarding->registerNewDF($_POST['email']);
+    try {
+        $onboarding = new Onboarding();
+        $response = $onboarding->registerNewDF($_POST['email']);
+    }catch (Exception $e){
+        echo json_encode($e->getMessage());
+        die();
+    }
     echo json_encode($response,JSON_PRETTY_PRINT);
 }else{
     echo json_encode([

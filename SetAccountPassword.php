@@ -11,12 +11,9 @@ if(isset($_POST['email']) && isset($_POST['oldPassword']) && isset($_POST['newPa
         ],JSON_PRETTY_PRINT);
         die();
     }
-    $passwordStrength = 'You have a strong password. Bravo!!';
     $onboarding = new Onboarding();
     $response = $onboarding->updatePassword($_POST['email'],$_POST);
-    echo json_encode(array_merge($response,[
-        'Password Strength' => $passwordStrength
-    ]),JSON_PRETTY_PRINT);
+    echo json_encode(array_merge($response),JSON_PRETTY_PRINT);
 }else{
     echo json_encode([
         'error' => 'Please enter an email, oldPassword and newPassword!!'
