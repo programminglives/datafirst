@@ -3,9 +3,9 @@
 class Connection {
 
     private $hostname = 'localhost';
-    private $username = 'username';
-    private $password = 'password';
-    private $database = 'database';
+    private $username = 'root';
+    private $password = 'reignofchaos';
+    private $database = 'dfa';
 
     private $connection;
 
