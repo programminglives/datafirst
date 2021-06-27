@@ -17,7 +17,7 @@ class Helper{
     }
 
     public function checkConfirmationToken($token, $email){
-        $sql = "SELECT * FROM users where email = ? AND confirmation_token = ?";
+        $sql = "SELECT * FROM usersDF_SYS_102 where email = ? AND confirmation_token = ?";
         $preparedStatement = $this->connection->prepare($sql);
         $preparedStatement->bind_param("ss",$email, $token);
         $preparedStatement->execute();
@@ -32,7 +32,7 @@ class Helper{
     }
 
     public function checkForgotPasswordToken($token, $email){
-        $sql = "SELECT * FROM users where email = ? AND password_reset_token = ?";
+        $sql = "SELECT * FROM usersDF_SYS_102 where email = ? AND password_reset_token = ?";
         $preparedStatement = $this->connection->prepare($sql);
         $preparedStatement->bind_param("ss",$email, $token);
         $preparedStatement->execute();

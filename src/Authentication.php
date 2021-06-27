@@ -36,7 +36,7 @@ class Authentication{
     }
 
     public function getUser($accessToken){
-        $sql = "SELECT * FROM users where access_token = ?";
+        $sql = "SELECT * FROM usersDF_SYS_102 where access_token = ?";
         $preparedStatement = $this->connection->prepare($sql);
         $preparedStatement->bind_param("s",$accessToken);
         $preparedStatement->execute();

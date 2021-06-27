@@ -22,7 +22,7 @@ class Onboarding{
     }
 
     public function registerNewDF($email){
-        $sql = "SELECT * FROM users where email = ?";
+        $sql = "SELECT * FROM usersDF_SYS_102 where email = ?";
         $preparedStatement = $this->connection->prepare($sql);
         $preparedStatement->bind_param("s",$email);
         $preparedStatement->execute();
@@ -49,7 +49,7 @@ class Onboarding{
     }
 
     public function loginDF($email, $password){
-        $sql = "SELECT * FROM users where email = ?";
+        $sql = "SELECT * FROM usersDF_SYS_102 where email = ?";
         $preparedStatement = $this->connection->prepare($sql);
         $preparedStatement->bind_param("s",$email);
         $preparedStatement->execute();
@@ -67,7 +67,7 @@ class Onboarding{
                 $hashedPassword = $row['password'];
             }
 //            $hashedPassword = password_hash($password,PASSWORD_DEFAULT);
-//            $sql = "SELECT * FROM users where email = ? AND password = ?";
+//            $sql = "SELECT * FROM usersDF_SYS_102 where email = ? AND password = ?";
 //            $preparedStatement = $this->connection->prepare($sql);
 //            $preparedStatement->bind_param("ss",$email, $hashedPassword);
 //            $preparedStatement->execute();
@@ -97,7 +97,7 @@ class Onboarding{
     }
 
     public function forgotPassword($email){
-        $sql = "SELECT * FROM users where email = ?";
+        $sql = "SELECT * FROM usersDF_SYS_102 where email = ?";
         $preparedStatement = $this->connection->prepare($sql);
         $preparedStatement->bind_param("s",$email);
         $preparedStatement->execute();
@@ -282,11 +282,11 @@ class Onboarding{
         $mail->Host = "smtp.gmail.com";
         $mail->Port = 465;
         $mail->SMTPAuth = true;
-        $mail->Username = 'test@gmail.com'; // gmail
-        $mail->Password = 'password'; // gmail password
+        $mail->Username = 'bomzansanjaya@gmail.com'; // gmail
+        $mail->Password = 'sdgpeujqgxbhepec'; // gmail password
 
-        $mail->From = "test@gmail.com";// gmail
-        $mail->FromName = "Test Name";
+        $mail->From = "bomzansanjaya@gmail.com";// gmail
+        $mail->FromName = "Data First";
         $mail->IsSMTP();
         $host = $_SERVER['HTTP_HOST'];
         switch ($subject){
@@ -300,7 +300,13 @@ class Onboarding{
                 $mail->addAddress($email);
                 $mail->Subject = 'Welcome! Confirm your email!';
                 $mail->isHTML(true);
-                $mail->Body = "<i>Confirm Your Email : <a href='http://".$host."/dfa_sun/ConfirmEmail.php?email=".$email."&confirmation_token=".$token."'>Confirm Now</a></i>";
+                $mail->Body = "<i>Confirm Your Email : <a href='http://".$host."/dfa_sun/ApproveAccount.php?email=".$email."&confirmation_token=".$token."'>Confirm Now</a></i>";
+                break;
+            case 'Invitation':
+                $mail->addAddress($email);
+                $mail->Subject = 'You have an invitation!';
+                $mail->isHTML(true);
+                $mail->Body = "<i>You have been invited by your friend to join Data First.</i>";
                 break;
         }
         return $mail->send();
@@ -312,7 +318,7 @@ class Onboarding{
      * @return bool
      */
     private function emailExists($email){
-        $sql = "SELECT * FROM users where email = ?";
+        $sql = "SELECT * FROM usersDF_SYS_102 where email = ?";
         $preparedStatement = $this->connection->prepare($sql);
         $preparedStatement->bind_param("s",$email);
         $preparedStatement->execute();
@@ -327,7 +333,7 @@ class Onboarding{
      * @return bool
      */
     private function passwordCorrect($email, $password){
-        $sql = "SELECT * FROM users where email = ?";
+        $sql = "SELECT * FROM usersDF_SYS_102 where email = ?";
         $preparedStatement = $this->connection->prepare($sql);
         $preparedStatement->bind_param("s",$email);
         $preparedStatement->execute();
